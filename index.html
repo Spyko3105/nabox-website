@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection NSFW - Galerie Privée</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">Collection NSFW</h1>
+            <p class="subtitle">Galerie privée et exclusive</p>
+        </header>
+
+        <!-- Section d'ajout de modèle -->
+        <section class="add-model-section">
+            <div class="section-header">
+                <h2>Ajouter un Nouveau Modèle</h2>
+                <button id="toggleAddModel" class="toggle-btn">▼</button>
+            </div>
+            <div id="addModelForm" class="form-container hidden">
+                <form class="model-form">
+                    <div class="form-group">
+                        <label for="modelName">Nom du modèle *</label>
+                        <input type="text" id="modelName" required placeholder="Ex: Emma Stone">
+                    </div>
+                    <div class="form-group">
+                        <label for="modelCategory">Catégorie *</label>
+                        <select id="modelCategory" required>
+                            <option value="">Choisir une catégorie</option>
+                            <option value="actrice">Actrice</option>
+                            <option value="modele">Modèle</option>
+                            <option value="influenceuse">Influenceuse</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelDescription">Description</label>
+                        <textarea id="modelDescription" placeholder="Description optionnelle..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelAvatar">Photo de profil</label>
+                        <div class="file-upload-area">
+                            <input type="file" id="modelAvatar" accept="image/*">
+                            <div class="upload-placeholder">
+                                <span>📷 Cliquer pour ajouter une photo</span>
+                            </div>
+                            <div class="preview-container hidden">
+                                <img id="avatarPreview" src="" alt="Aperçu">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Ajouter le Modèle</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Section d'ajout de photos -->
+        <section class="add-photo-section">
+            <div class="section-header">
+                <h2>Ajouter des Photos</h2>
+                <button id="toggleAddPhoto" class="toggle-btn">▼</button>
+            </div>
+            <div id="addPhotoForm" class="form-container hidden">
+                <form class="photo-form">
+                    <div class="form-group">
+                        <label for="photoModel">Modèle *</label>
+                        <select id="photoModel" required>
+                            <option value="">Choisir un modèle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="photoCategory">Catégorie de photos *</label>
+                        <select id="photoCategory" required>
+                            <option value="">Choisir une catégorie</option>
+                            <option value="portrait">Portrait</option>
+                            <option value="boudoir">Boudoir</option>
+                            <option value="artistique">Artistique</option>
+                            <option value="glamour">Glamour</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="photoFiles">Photos *</label>
+                        <div class="file-upload-area multiple">
+                            <input type="file" id="photoFiles" accept="image/*" multiple>
+                            <div class="upload-placeholder">
+                                <span>📷 Cliquer pour sélectionner des photos</span>
+                                <small>Vous pouvez sélectionner plusieurs photos à la fois</small>
+                            </div>
+                            <div class="preview-grid hidden">
+                                <!-- Les previews seront ajoutées ici dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="photoDescription">Description des photos</label>
+                        <textarea id="photoDescription" placeholder="Décrivez le contenu des photos..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Ajouter les Photos</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Galerie -->
+        <section class="gallery-section">
+            <div class="section-header">
+                <h2>Galerie</h2>
+                <div class="gallery-controls">
+                    <select id="filterCategory" class="filter-select">
+                        <option value="">Toutes les catégories</option>
+                        <option value="actrice">Actrices</option>
+                        <option value="modele">Modèles</option>
+                        <option value="influenceuse">Influenceuses</option>
+                        <option value="autre">Autres</option>
+                    </select>
+                    <select id="filterModel" class="filter-select">
+                        <option value="">Tous les modèles</option>
+                    </select>
+                </div>
+            </div>
+            <div id="gallery" class="gallery">
+                <!-- Les photos seront affichées ici -->
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
