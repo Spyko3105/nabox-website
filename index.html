@@ -1,72 +1,107 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Suivi Entraînement</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 10px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background: #22c55e;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📱 Fitness Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body><h1>💪 Suivi Entraînement</h1><div class="card">
-  <h2>Ajouter une séance</h2>
-  <input type="text" id="jour" placeholder="Jour (ex: Lundi)">
-  <input type="text" id="exercice" placeholder="Exercice">
-  <input type="number" id="reps" placeholder="Répétitions">
-  <button onclick="addSession()">Ajouter</button>
-</div><div class="card">
-  <h2>Historique</h2>
-  <ul id="list"></ul>
-</div><script>
-function addSession() {
-  const jour = document.getElementById('jour').value;
-  const exercice = document.getElementById('exercice').value;
-  const reps = document.getElementById('reps').value;
+<body>
+    <h1>💪 Coach Connect</h1>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Nouvelle Séance</h2>
+            <div class="grid-form">
+                <input type="text" id="exercice" placeholder="Exercice (ex: Développé couché)">
+                <input type="number" id="poids" placeholder="Poids (kg)">
+                <input type="number" id="reps" placeholder="Répétitions">
+                <button onclick="addSession()">Enregistrer</button>
+            </div>
+        </div>
 
-  if (!jour || !exercice || !reps) return alert("Remplis tout !");
+        <div class="card">
+            <h2>Progression</h2>
+            <canvas id="fitnessChart"></canvas>
+            <p>Total séances : <span id="total">0</span></p>
+        </div>
 
-  const data = JSON.parse(localStorage.getItem('training')) || [];
-  data.push({ jour, exercice, reps });
-  localStorage.setItem('training', JSON.stringify(data));
+        <div class="card">
+            <h2>Historique</h2>
+            <ul id="list"></ul>
+            <button class="btn-danger" onclick="clearAll()">Réinitialiser</button>
+        </div>
+    </div>
 
-  display();
-}
+    <script>
+        let myChart;
 
-function display() {
-  const list = document.getElementById('list');
-  list.innerHTML = "";
+        const getData = () => JSON.parse(localStorage.getItem('fitness_v3')) || [];
+        
+        function updateChart() {
+            const data = getData();
+            const ctx = document.getElementById('fitnessChart').getContext('2d');
+            
+            if (myChart) myChart.destroy();
 
-  const data = JSON.parse(localStorage.getItem('training')) || [];
-  data.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.textContent = `${item.jour} - ${item.exercice} : ${item.reps} reps`;
-    list.appendChild(li);
-  });
-}
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(i => i.date.split(' ')[0]),
+                    datasets: [{
+                        label: 'Évolution du Poids (kg)',
+                        data: data.map(i => i.poids),
+                        borderColor: '#22c55e',
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)'
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: false } } }
+            });
+        }
 
-window.onload = display;
-</script></body>
+        function addSession() {
+            const ex = document.getElementById('exercice').value;
+            const p = document.getElementById('poids').value;
+            const r = document.getElementById('reps').value;
+
+            if (!ex || !p || !r) return alert("Champs vides !");
+
+            const data = getData();
+            data.push({ 
+                exercice: ex, 
+                poids: parseFloat(p), 
+                reps: r, 
+                date: new Date().toLocaleDateString() 
+            });
+            
+            localStorage.setItem('fitness_v3', JSON.stringify(data));
+            display();
+        }
+
+        function clearAll() {
+            if (confirm("Effacer tout ?")) {
+                localStorage.removeItem('fitness_v3');
+                display();
+            }
+        }
+
+        function display() {
+            const list = document.getElementById('list');
+            const data = getData();
+            document.getElementById('total').textContent = data.length;
+            list.innerHTML = data.reverse().map(item => `
+                <li>
+                    <strong>${item.exercice}</strong> : ${item.poids}kg x ${item.reps}<br>
+                    <small>${item.date}</small>
+                </li>
+            `).join('');
+            updateChart();
+        }
+
+        window.onload = display;
+    </script>
+</body>
 </html>
